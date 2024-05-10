@@ -9,16 +9,20 @@ const employeeSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true // Assuming email should be unique for each employee
+    unique: true 
   },
   password: {
+    type: String,
+    required: true
+  },
+  role: {
     type: String,
     required: true
   },
   pic: {
     type: String,
     default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8F_iFBaIYpSvJ53k-qlO4HOHwkAV-81t3L3WDMLiWsg&s"
-  } // Picture is not required
+  } 
 });
 
 employeeSchema.methods.matchPassword = async function (enteredPassword) {
@@ -27,7 +31,7 @@ employeeSchema.methods.matchPassword = async function (enteredPassword) {
 
 employeeSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
-    next(); // Skip hashing if the password is not modified
+    next(); 
   }
 
   const salt = await bcrypt.genSalt(10);
