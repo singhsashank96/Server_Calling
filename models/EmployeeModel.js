@@ -21,7 +21,7 @@ const employeeSchema = new mongoose.Schema({
   },
   pic: {
     type: String,
-    default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8F_iFBaIYpSvJ53k-qlO4HOHwkAV-81t3L3WDMLiWsg&s"
+    default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0Ok4o0-M8jXzFzvBaa4ZzYfn4EMf9FXJhqSjOXMSJNZWGM3mUmavl5VRIRg&s"
   } 
 });
 

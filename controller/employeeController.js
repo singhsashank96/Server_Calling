@@ -65,18 +65,25 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const AllUsers = asyncHandler(async (req, res) => {
-  const keyword = req.query.search
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ status: 'error', message: "You are not authorized to access this resource" });
+  }
+
+  const { name } = req.query; // Extract search keyword from query parameters
+
+  const keyword = name
     ? {
         $or: [
-          { name: { $regex: req.query.search, $options: "i" } },
-          { email: { $regex: req.query.search, $options: "i" } },
+          { name: { $regex: `.*${name}.*`, $options: "i" } },
+          { email: { $regex: `.*${name}.*`, $options: "i" } },
         ],
       }
     : {};
 
-  const users = await Employee.find(keyword).find({ _id: { $ne: req.user._id } });
+  const users = await Employee.find(keyword);
   res.json({ status: 'success', data: users });
 });
+
 
 module.exports = {
   registerUser,

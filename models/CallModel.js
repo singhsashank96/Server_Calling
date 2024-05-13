@@ -1,4 +1,3 @@
-// models/CallModel.js
 const mongoose = require('mongoose');
 
 const callSchema = new mongoose.Schema({
@@ -7,6 +6,10 @@ const callSchema = new mongoose.Schema({
     ref: 'Employee'
   },
   toCall: {
+    type: String,
+    required: true
+  },
+  userMobile: {
     type: String,
     required: true
   },
