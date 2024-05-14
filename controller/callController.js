@@ -46,8 +46,44 @@ const getCallHistoryByStatus = asyncHandler(async (req, res) => {
   res.json({ status: 'success', data: calls });
 });
 
+const getCallHistoryWithPagination = asyncHandler(async (req, res) => {
+  const { role } = req.user; // Extract role from request object
+  const page = parseInt(req.query.page) || 1; // Extract page number from query parameters
+  const limit = 10; // Number of calls per page
+
+  let calls;
+  let totalCalls;
+
+  if (role === 'admin') {
+    // For admin, get all calls
+    calls = await Call.find({})
+      .skip((page - 1) * limit) // Skip calls based on the page number
+      .limit(limit); // Limit the number of calls per page
+    totalCalls = await Call.countDocuments(); // Get total number of calls
+  } else {
+    const employeeId = req.user._id; // Extract employee ID from request object
+    calls = await Call.find({ employee: employeeId })
+      .skip((page - 1) * limit) // Skip calls based on the page number
+      .limit(limit); // Limit the number of calls per page
+    totalCalls = await Call.countDocuments({ employee: employeeId }); // Get total number of calls for the employee
+  }
+
+  const totalPages = Math.ceil(totalCalls / limit); // Calculate total number of pages
+
+  res.json({
+    status: 'success',
+    data: calls,
+    totalPages,
+    currentPage: page
+  });
+});
+
+
+
+
 module.exports = {
   makeCall,
   getCallHistory,
-  getCallHistoryByStatus
+  getCallHistoryByStatus,
+  getCallHistoryWithPagination
 };
